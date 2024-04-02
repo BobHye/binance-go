@@ -1,0 +1,109 @@
+package futures
+
+import (
+	"context"
+	"github.com/BobHye/binance-go/api"
+	"net/http"
+)
+
+type Balance struct {
+	AccountAlias       string  `json:"accountAlias"`
+	Asset              string  `json:"asset"`
+	Balance            float64 `json:"balance,string"`
+	CrossWalletBalance float64 `json:"crossWalletBalance,string"`
+	CrossUnPnl         float64 `json:"crossUnPnl,string"`
+	AvailableBalance   float64 `json:"availableBalance,string"`
+	MaxWithdrawAmount  float64 `json:"maxWithdrawAmount,string"`
+}
+
+// GetBalanceService 获取账户余额
+type GetBalanceService struct {
+	c *Client
+}
+
+func (s *GetBalanceService) Do(ctx context.Context, opts ...api.RequestOption) (res []*Balance, err error) {
+	r := &api.Request{
+		Method:   http.MethodGet,
+		Endpoint: "/fapi/v2/balance",
+		SecType:  api.SecTypeSigned,
+	}
+	data, _, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return res, err
+	}
+	err = json.Unmarshal(data, &res)
+	return res, err
+}
+
+type AccountAsset struct {
+	Asset                  string  `json:"asset"`
+	InitialMargin          float64 `json:"initialMargin,string"`
+	MaintMargin            float64 `json:"maintMargin,string"`
+	MarginBalance          float64 `json:"marginBalance,string"`
+	MaxWithdrawAmount      float64 `json:"maxWithdrawAmount,string"`
+	OpenOrderInitialMargin float64 `json:"openOrderInitialMargin,string"`
+	PositionInitialMargin  float64 `json:"positionInitialMargin,string"`
+	UnrealizedProfit       float64 `json:"unrealizedProfit,string"`
+	WalletBalance          float64 `json:"walletBalance,string"`
+}
+
+type AccountPosition struct {
+	Isolated               bool             `json:"isolated"`
+	Leverage               string           `json:"leverage"`
+	InitialMargin          float64          `json:"initialMargin,string"`
+	MaintMargin            float64          `json:"maintMargin,string"`
+	OpenOrderInitialMargin float64          `json:"openOrderInitialMargin,string"`
+	PositionInitialMargin  float64          `json:"positionInitialMargin,string"`
+	Symbol                 string           `json:"symbol"`
+	UnrealizedProfit       float64          `json:"unrealizedProfit,string"`
+	EntryPrice             float64          `json:"entryPrice,string"`
+	MaxNotional            float64          `json:"maxNotional,string"`
+	PositionSide           PositionSideType `json:"positionSide"`
+	PositionAmt            float64          `json:"positionAmt,string"`
+	Notional               float64          `json:"notional,string"`
+	IsolatedWallet         string           `json:"isolatedWallet"`
+	UpdateTime             int64            `json:"updateTime"`
+}
+
+type Account struct {
+	Assets                      []*AccountAsset    `json:"assets"`
+	FeeTier                     int                `json:"feeTier"`
+	CanTrade                    bool               `json:"canTrade"`
+	CanDeposit                  bool               `json:"canDeposit"`
+	CanWithdraw                 bool               `json:"canWithdraw"`
+	UpdateTime                  int64              `json:"updateTime"`
+	TotalInitialMargin          float64            `json:"totalInitialMargin,string"`
+	TotalMaintMargin            float64            `json:"totalMaintMargin,string"`
+	TotalWalletBalance          float64            `json:"totalWalletBalance,string"`
+	TotalUnrealizedProfit       float64            `json:"totalUnrealizedProfit,string"`
+	TotalMarginBalance          float64            `json:"totalMarginBalance,string"`
+	TotalPositionInitialMargin  float64            `json:"totalPositionInitialMargin,string"`
+	TotalOpenOrderInitialMargin float64            `json:"totalOpenOrderInitialMargin,string"`
+	TotalCrossWalletBalance     float64            `json:"totalCrossWalletBalance,string"`
+	TotalCrossUnPnl             float64            `json:"totalCrossUnPnl,string"`
+	AvailableBalance            float64            `json:"availableBalance,string"`
+	MaxWithdrawAmount           float64            `json:"maxWithdrawAmount,string"`
+	Positions                   []*AccountPosition `json:"positions"`
+}
+
+type GetAccountService struct {
+	c *Client
+}
+
+func (s *GetAccountService) Do(ctx context.Context, opts ...api.RequestOption) (res *Account, err error) {
+	r := &api.Request{
+		Method:   http.MethodGet,
+		Endpoint: "/fapi/v2/account",
+		SecType:  api.SecTypeSigned,
+	}
+	data, _, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(Account)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
