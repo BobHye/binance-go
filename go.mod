@@ -1,4 +1,4 @@
-module github.com/BobHye/go-binance
+module github.com/BobHye/binance-go
 
 go 1.23.1
 
