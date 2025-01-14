@@ -89,16 +89,16 @@ type Symbol struct {
 
 // LotSizeFilter define lot size filter of symbol | 数量限制
 type LotSizeFilter struct {
-	MaxQuantity string `json:"maxQty"`   // 数量上限, 最大数量
-	MinQuantity string `json:"minQty"`   // 数量下限, 最小数量
-	StepSize    string `json:"stepSize"` // 订单最小数量间隔
+	MaxQuantity float64 `json:"maxQty,string"`   // 数量上限, 最大数量
+	MinQuantity float64 `json:"minQty,string"`   // 数量下限, 最小数量
+	StepSize    float64 `json:"stepSize,string"` // 订单最小数量间隔
 }
 
 // PriceFilter define price filter of symbol | 价格限制
 type PriceFilter struct {
-	MaxPrice string `json:"maxPrice"` // 价格上限, 最大价格
-	MinPrice string `json:"minPrice"` // 价格下限, 最小价格
-	TickSize string `json:"tickSize"` // 订单最小价格间隔
+	MaxPrice float64 `json:"maxPrice,string"` // 价格上限, 最大价格
+	MinPrice float64 `json:"minPrice,string"` // 价格下限, 最小价格
+	TickSize float64 `json:"tickSize,string"` // 订单最小价格间隔
 }
 
 // PercentPriceFilter define percent price filter of symbol | // 价格比限制
@@ -110,9 +110,9 @@ type PercentPriceFilter struct {
 
 // MarketLotSizeFilter define market lot size filter of symbol | 市价订单数量限制
 type MarketLotSizeFilter struct {
-	MaxQuantity string `json:"maxQty"`   // 数量上限, 最大数量
-	MinQuantity string `json:"minQty"`   // 数量下限, 最小数量
-	StepSize    string `json:"stepSize"` // 允许的步进值
+	MaxQuantity float64 `json:"maxQty,string"`   // 数量上限, 最大数量
+	MinQuantity float64 `json:"minQty,string"`   // 数量下限, 最小数量
+	StepSize    float64 `json:"stepSize,string"` // 允许的步进值
 }
 
 // MaxNumOrdersFilter define max num orders filter of symbol | 最多订单数限制
@@ -136,13 +136,25 @@ func (s *Symbol) LotSizeFilter() *LotSizeFilter {
 		if filter["filterType"].(string) == string(SymbolFilterTypeLotSize) {
 			f := &LotSizeFilter{}
 			if i, ok := filter["maxQty"]; ok {
-				f.MaxQuantity = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.MaxQuantity = v
 			}
 			if i, ok := filter["minQty"]; ok {
-				f.MinQuantity = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.MinQuantity = v
 			}
 			if i, ok := filter["stepSize"]; ok {
-				f.StepSize = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.StepSize = v
 			}
 			return f
 		}
@@ -156,13 +168,25 @@ func (s *Symbol) PriceFilter() *PriceFilter {
 		if filter["filterType"].(string) == string(SymbolFilterTypePrice) {
 			f := &PriceFilter{}
 			if i, ok := filter["maxPrice"]; ok {
-				f.MaxPrice = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.MaxPrice = v
 			}
 			if i, ok := filter["minPrice"]; ok {
-				f.MinPrice = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.MinPrice = v
 			}
 			if i, ok := filter["tickSize"]; ok {
-				f.TickSize = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.TickSize = v
 			}
 			return f
 		}
@@ -202,13 +226,25 @@ func (s *Symbol) MarketLotSizeFilter() *MarketLotSizeFilter {
 		if filter["filterType"].(string) == string(SymbolFilterTypeMarketLotSize) {
 			f := &MarketLotSizeFilter{}
 			if i, ok := filter["maxQty"]; ok {
-				f.MaxQuantity = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.MaxQuantity = v
 			}
 			if i, ok := filter["minQty"]; ok {
-				f.MinQuantity = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.MinQuantity = v
 			}
 			if i, ok := filter["stepSize"]; ok {
-				f.StepSize = i.(string)
+				v, err := strconv.ParseFloat(i.(string), 64)
+				if err != nil {
+					return nil
+				}
+				f.StepSize = v
 			}
 			return f
 		}

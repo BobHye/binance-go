@@ -83,7 +83,7 @@ func (s *GetPositionMarginHistoryService) Do(ctx context.Context, opts ...Reques
 type PositionMarginHistory struct {
 	Amount       string           `json:"amount"`       // 数量
 	Asset        string           `json:"asset"`        // 资产
-	DeltaType    string           `json:"deltaType"`    // 划转类型
+	DeltaType    string           `json:"deltaType"`    // 划转类型w
 	Symbol       string           `json:"symbol"`       // 交易对
 	Time         int64            `json:"time"`         // 时间
 	Type         int              `json:"type"`         // 调整方向
