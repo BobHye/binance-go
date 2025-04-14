@@ -1,7 +1,7 @@
 package delivery
 
 import (
-	"github.com/BobHye/binance-go/config"
+	"github.com/BobHye/binance-go/log"
 	"github.com/BobHye/wsc"
 	"github.com/gorilla/websocket"
 )
